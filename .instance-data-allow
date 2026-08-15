@@ -1,0 +1,19 @@
+# Exemptions from the shared instance-data gate. Format: "<scan label>: <ERE>".
+# Each applies to the named scan only. Add a reason; an exemption without one is
+# indistinguishable from a mistake six months later.
+#
+# This file is tracked and therefore scanned like any other. Keep the reasons free
+# of forms the scans catch — spelling one out here would need an exemption of its own.
+
+# This sidecar decides whether a caller is inside the tailnet, so the policy code and
+# its tests have to name the ranges themselves. These are the published allocations —
+# RFC 6598 carrier-grade NAT and the Tailscale ULA prefix — plus the first and last
+# addresses of the block, which the tests use as boundary values. None of them is the
+# address of a node.
+private address: 100\.64\.0\.0/
+private address: 100\.64\.0\.1|100\.127\.255\.255
+private address (tailscale ipv6): fd7a:115c:a1e0::1?($|[^0-9a-f])
+
+# Roadmap rows record when a milestone landed. A status word next to a release date
+# reads to the heuristic as a narrated observation; in a status table it is a date.
+dated observation: ROADMAP

@@ -7,6 +7,12 @@ on:
   workflow_dispatch:
 
 jobs:
+  # Publish-time gate, shared with every other public katalalab repository. Two
+  # sibling repos shipped the operator's home paths while their own checks reported
+  # ok, so this runs from one canonical source rather than a per-repo copy.
+  no-instance-data:
+    uses: katalalab/.github/.github/workflows/instance-data-gate.yml@main
+
   verify-local:
     runs-on: ubuntu-latest
     timeout-minutes: 15
