@@ -1,20 +1,20 @@
 {
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "noEmit": true,
-    "allowJs": true,
-    "checkJs": false
-  },
-  "include": [
-    "packages/katala/core/**/*.ts",
-    "packages/katala/gateway/**/*.ts",
-    "packages/katala/proto/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "packages/katala/mediation-client",
-    "packages/katala/core/test-synergy.ts",
-    "packages/katala/gateway/PythonInfCodingAdapter.ts",
-    "packages/katala/gateway/index.ts"
-  ]
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"noEmit": true,
+		"allowJs": true,
+		"checkJs": false
+	},
+	"include": [
+		"packages/katala/core/**/*.ts",
+		"packages/katala/gateway/**/*.ts",
+		"packages/katala/proto/**/*.ts"
+	],
+	"exclude": [
+		"node_modules",
+		"packages/katala/mediation-client",
+		"packages/katala/core/test-synergy.ts",
+		"packages/katala/gateway/PythonInfCodingAdapter.ts",
+		"packages/katala/gateway/index.ts"
+	]
 }

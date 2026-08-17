@@ -1,31 +1,32 @@
 {
-  "name": "katala-trust",
-  "version": "0.1.0",
-  "private": false,
-  "description": "Katala verification sidecar \u2014 lab-neutral trust, mediation, and think contract",
-  "license": "MIT",
-  "type": "commonjs",
-  "scripts": {
-    "katala:think": "node packages/katala/gateway/katala-think.mjs",
-    "katala:think-host": "node packages/katala/gateway/katala-think-host.mjs",
-    "test": "vitest run",
-    "typecheck": "tsc --noEmit -p tsconfig.json",
-    "typecheck:katala": "tsc --noEmit -p tsconfig.katala.json",
-    "verify:gateway": "vitest run packages/katala/gateway packages/katala/core/__tests__/LocalMediationManager.test.ts packages/katala/core/__tests__/AgentGatewayPolicy.test.ts packages/katala/core/__tests__/TrustScorer.test.ts packages/katala/core/__tests__/ConsensusEngine.test.ts",
-    "verify:local": "npm test && npm run typecheck:katala && npm run verify:gateway && node examples/host-hook-smoke.mjs && node examples/openclaw-tool-adapter-smoke.mjs && node examples/host-decision-matrix.mjs && node examples/blocked-write-demo.mjs && node examples/think-host-cli-smoke.mjs && node examples/agent-turn-preflight.mjs && node scripts/run-trust-eval.mjs",
-    "verify:trust-eval": "node scripts/run-trust-eval.mjs",
-    "verify:host-embed": "node examples/host-decision-matrix.mjs && node examples/openclaw-tool-adapter-smoke.mjs && node examples/host-hook-smoke.mjs && node examples/blocked-write-demo.mjs && node examples/think-host-cli-smoke.mjs && node examples/agent-turn-preflight.mjs",
-    "verify:leak-guard": "bash scripts/ci/verify-leak-guard.sh"
-  },
-  "dependencies": {
-    "zod": "^4.3.6"
-  },
-  "devDependencies": {
-    "@types/node": "^20",
-    "typescript": "^5",
-    "vitest": "^4.0.18"
-  },
-  "engines": {
-    "node": ">=20"
-  }
+	"name": "katala-trust",
+	"version": "0.1.0",
+	"private": false,
+	"description": "Katala verification sidecar — lab-neutral trust, mediation, and think contract",
+	"license": "MIT",
+	"type": "commonjs",
+	"scripts": {
+		"katala:think": "node packages/katala/gateway/katala-think.mjs",
+		"katala:think-host": "node packages/katala/gateway/katala-think-host.mjs",
+		"test": "vitest run",
+		"typecheck": "tsc --noEmit -p tsconfig.json",
+		"typecheck:katala": "tsc --noEmit -p tsconfig.katala.json",
+		"verify:gateway": "vitest run packages/katala/gateway packages/katala/core/__tests__/LocalMediationManager.test.ts packages/katala/core/__tests__/AgentGatewayPolicy.test.ts packages/katala/core/__tests__/TrustScorer.test.ts packages/katala/core/__tests__/ConsensusEngine.test.ts",
+		"verify:local": "npm test && npm run typecheck:katala && npm run verify:gateway && node examples/host-hook-smoke.mjs && node examples/openclaw-tool-adapter-smoke.mjs && node examples/host-decision-matrix.mjs && node examples/blocked-write-demo.mjs && node examples/think-host-cli-smoke.mjs && node examples/agent-turn-preflight.mjs && node scripts/run-trust-eval.mjs",
+		"verify:trust-eval": "node scripts/run-trust-eval.mjs",
+		"verify:host-embed": "node examples/host-decision-matrix.mjs && node examples/openclaw-tool-adapter-smoke.mjs && node examples/host-hook-smoke.mjs && node examples/blocked-write-demo.mjs && node examples/think-host-cli-smoke.mjs && node examples/agent-turn-preflight.mjs",
+		"verify:leak-guard": "bash scripts/ci/verify-leak-guard.sh"
+	},
+	"dependencies": {
+		"zod": "^4.3.6"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.5.8",
+		"@types/node": "^20",
+		"typescript": "^5",
+		"vitest": "^4.0.18"
+	},
+	"engines": {
+		"node": ">=20"
+	}
 }

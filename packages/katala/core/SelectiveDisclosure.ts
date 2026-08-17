@@ -32,16 +32,16 @@ import { IdentityVector } from "./IdentityVector";
 
 /** Committed (hidden) value: only the commitment hash is shared */
 export interface CommittedField {
-  revealed: false;
-  commitment: string; // hex SHA-256
+	revealed: false;
+	commitment: string; // hex SHA-256
 }
 
 /** Revealed value: commitment + plaintext proof */
 export interface RevealedField<T = unknown> {
-  revealed: true;
-  commitment: string; // hex SHA-256 (for independent verification)
-  salt: string;       // hex random nonce used during commitment
-  value: T;           // plaintext value
+	revealed: true;
+	commitment: string; // hex SHA-256 (for independent verification)
+	salt: string; // hex random nonce used during commitment
+	value: T; // plaintext value
 }
 
 export type DisclosedField<T = unknown> = CommittedField | RevealedField<T>;
@@ -54,19 +54,19 @@ export type IdentityVectorKey = keyof IdentityVector;
  * (hidden) or a revealed proof. Shared with the verifier.
  */
 export type DisclosureEnvelope = {
-  [K in IdentityVectorKey]: DisclosedField<IdentityVector[K]>;
+	[K in IdentityVectorKey]: DisclosedField<IdentityVector[K]>;
 };
 
 /** Internal per-field secret kept by the prover (never shared) */
 interface FieldSecret<T = unknown> {
-  salt: string;
-  value: T;
-  commitment: string;
+	salt: string;
+	value: T;
+	commitment: string;
 }
 
 /** Full prover state — contains salts & plaintext. NOT shared with verifier. */
 export type ProverSecrets = {
-  [K in IdentityVectorKey]: FieldSecret<IdentityVector[K]>;
+	[K in IdentityVectorKey]: FieldSecret<IdentityVector[K]>;
 };
 
 // ---------------------------------------------------------------------------
@@ -75,14 +75,14 @@ export type ProverSecrets = {
 
 /** Compute commitment = SHA-256(salt + ":" + JSON(value)) */
 function commit(salt: string, value: unknown): string {
-  return createHash("sha256")
-    .update(`${salt}:${JSON.stringify(value)}`)
-    .digest("hex");
+	return createHash("sha256")
+		.update(`${salt}:${JSON.stringify(value)}`)
+		.digest("hex");
 }
 
 /** Generate a cryptographically random 16-byte hex salt */
 function randomSalt(): string {
-  return randomBytes(16).toString("hex");
+	return randomBytes(16).toString("hex");
 }
 
 // ---------------------------------------------------------------------------
@@ -97,20 +97,20 @@ function randomSalt(): string {
  * @returns ProverSecrets (keep private) — used later to build envelopes
  */
 export function buildCommitments(vector: IdentityVector): ProverSecrets {
-  const keys = Object.keys(vector) as IdentityVectorKey[];
-  const secrets: Partial<Record<IdentityVectorKey, FieldSecret>> = {};
+	const keys = Object.keys(vector) as IdentityVectorKey[];
+	const secrets: Partial<Record<IdentityVectorKey, FieldSecret>> = {};
 
-  for (const key of keys) {
-    const salt = randomSalt();
-    const value = vector[key] as IdentityVector[typeof key];
-    secrets[key] = {
-      salt,
-      value,
-      commitment: commit(salt, value),
-    };
-  }
+	for (const key of keys) {
+		const salt = randomSalt();
+		const value = vector[key] as IdentityVector[typeof key];
+		secrets[key] = {
+			salt,
+			value,
+			commitment: commit(salt, value),
+		};
+	}
 
-  return secrets as ProverSecrets;
+	return secrets as ProverSecrets;
 }
 
 /**
@@ -123,31 +123,31 @@ export function buildCommitments(vector: IdentityVector): ProverSecrets {
  * @returns DisclosureEnvelope safe to send to verifier
  */
 export function createEnvelope(
-  secrets: ProverSecrets,
-  revealKeys: IdentityVectorKey[],
+	secrets: ProverSecrets,
+	revealKeys: IdentityVectorKey[],
 ): DisclosureEnvelope {
-  const revealSet = new Set(revealKeys);
-  const keys = Object.keys(secrets) as IdentityVectorKey[];
-  const envelope: Partial<Record<IdentityVectorKey, DisclosedField>> = {};
+	const revealSet = new Set(revealKeys);
+	const keys = Object.keys(secrets) as IdentityVectorKey[];
+	const envelope: Partial<Record<IdentityVectorKey, DisclosedField>> = {};
 
-  for (const key of keys) {
-    const s = secrets[key];
-    if (revealSet.has(key)) {
-      envelope[key] = {
-        revealed: true,
-        commitment: s.commitment,
-        salt: s.salt,
-        value: s.value as IdentityVector[typeof key],
-      };
-    } else {
-      envelope[key] = {
-        revealed: false,
-        commitment: s.commitment,
-      };
-    }
-  }
+	for (const key of keys) {
+		const s = secrets[key];
+		if (revealSet.has(key)) {
+			envelope[key] = {
+				revealed: true,
+				commitment: s.commitment,
+				salt: s.salt,
+				value: s.value as IdentityVector[typeof key],
+			};
+		} else {
+			envelope[key] = {
+				revealed: false,
+				commitment: s.commitment,
+			};
+		}
+	}
 
-  return envelope as DisclosureEnvelope;
+	return envelope as DisclosureEnvelope;
 }
 
 // ---------------------------------------------------------------------------
@@ -155,14 +155,14 @@ export function createEnvelope(
 // ---------------------------------------------------------------------------
 
 export interface VerificationResult {
-  /** True only if every revealed field's commitment verifies correctly */
-  valid: boolean;
-  /** Fields that passed verification */
-  verified: IdentityVectorKey[];
-  /** Fields that failed (commitment mismatch) */
-  failed: IdentityVectorKey[];
-  /** Fields that were not revealed (blinded) */
-  blinded: IdentityVectorKey[];
+	/** True only if every revealed field's commitment verifies correctly */
+	valid: boolean;
+	/** Fields that passed verification */
+	verified: IdentityVectorKey[];
+	/** Fields that failed (commitment mismatch) */
+	failed: IdentityVectorKey[];
+	/** Fields that were not revealed (blinded) */
+	blinded: IdentityVectorKey[];
 }
 
 /**
@@ -173,34 +173,36 @@ export interface VerificationResult {
  * @param envelope - Received from prover
  * @returns VerificationResult with per-field breakdown
  */
-export function verifyEnvelope(envelope: DisclosureEnvelope): VerificationResult {
-  const verified: IdentityVectorKey[] = [];
-  const failed: IdentityVectorKey[] = [];
-  const blinded: IdentityVectorKey[] = [];
+export function verifyEnvelope(
+	envelope: DisclosureEnvelope,
+): VerificationResult {
+	const verified: IdentityVectorKey[] = [];
+	const failed: IdentityVectorKey[] = [];
+	const blinded: IdentityVectorKey[] = [];
 
-  const keys = Object.keys(envelope) as IdentityVectorKey[];
+	const keys = Object.keys(envelope) as IdentityVectorKey[];
 
-  for (const key of keys) {
-    const field = envelope[key];
-    if (!field.revealed) {
-      blinded.push(key);
-      continue;
-    }
+	for (const key of keys) {
+		const field = envelope[key];
+		if (!field.revealed) {
+			blinded.push(key);
+			continue;
+		}
 
-    const expected = commit(field.salt, field.value);
-    if (expected === field.commitment) {
-      verified.push(key);
-    } else {
-      failed.push(key);
-    }
-  }
+		const expected = commit(field.salt, field.value);
+		if (expected === field.commitment) {
+			verified.push(key);
+		} else {
+			failed.push(key);
+		}
+	}
 
-  return {
-    valid: failed.length === 0,
-    verified,
-    failed,
-    blinded,
-  };
+	return {
+		valid: failed.length === 0,
+		verified,
+		failed,
+		blinded,
+	};
 }
 
 /**
@@ -211,17 +213,17 @@ export function verifyEnvelope(envelope: DisclosureEnvelope): VerificationResult
  * @returns Partial IdentityVector containing only disclosed fields
  */
 export function extractRevealedAttributes(
-  envelope: DisclosureEnvelope,
+	envelope: DisclosureEnvelope,
 ): Partial<IdentityVector> {
-  const result: Partial<IdentityVector> = {};
-  const keys = Object.keys(envelope) as IdentityVectorKey[];
+	const result: Partial<IdentityVector> = {};
+	const keys = Object.keys(envelope) as IdentityVectorKey[];
 
-  for (const key of keys) {
-    const field = envelope[key];
-    if (field.revealed) {
-      (result as Record<string, unknown>)[key] = field.value;
-    }
-  }
+	for (const key of keys) {
+		const field = envelope[key];
+		if (field.revealed) {
+			(result as Record<string, unknown>)[key] = field.value;
+		}
+	}
 
-  return result;
+	return result;
 }
