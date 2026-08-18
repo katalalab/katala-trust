@@ -381,10 +381,20 @@ export function createKatalaThinkResponseFromUnknown(input) {
   return createKatalaThinkResponse(parsed.data);
 }
 
+// A request this size is already far past what the contract accepts (128 context items,
+// 20k chars each). Reading without a bound turned an oversized or never-closing stdin
+// into unbounded heap growth in the host process rather than a rejected request.
+const MAX_STDIN_BYTES = 8 * 1024 * 1024;
+
 async function readAllFromStdin(stdin) {
   let data = "";
   for await (const chunk of stdin) {
     data += String(chunk);
+    if (data.length > MAX_STDIN_BYTES) {
+      throw new Error(
+        `katala-think: stdin exceeded ${MAX_STDIN_BYTES} bytes; refusing to buffer further`,
+      );
+    }
   }
   return data;
 }

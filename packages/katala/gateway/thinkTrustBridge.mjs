@@ -188,7 +188,13 @@ export function evaluateContextTrust(contextItems, now = new Date()) {
       caveats: ["no_public_or_mediation_context_to_score"],
       dissent: [],
       claim_summaries: [],
-      requires_human_approval: false,
+      // Nothing to score is not the same as nothing wrong. Returning false here let a
+      // request with no PUBLIC or MEDIATION context through as status=ok, and
+      // hostApprovalGate answers "allow" for that — grade "N/A" is neither D nor F, so
+      // the block check does not catch it either. The sidecar's whole job was skipped
+      // silently on the path where it had no evidence at all, in a package whose README
+      // promises fail-closed recommendations.
+      requires_human_approval: true,
     };
   }
 

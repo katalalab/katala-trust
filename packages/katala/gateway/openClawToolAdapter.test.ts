@@ -30,3 +30,25 @@ describe("openClawToolAdapter", () => {
     expect(OPENCLAW_KATALA_THINK_TOOL.parameters.required).toContain("goal");
   });
 });
+
+describe("normalizeVisibility fallback direction", () => {
+  const ctx = { hostName: "host", sessionId: "s1", requestId: "r1" };
+
+  // An unrecognised token used to become PUBLIC, so "secret" and "confidential" were
+  // scored and forwarded as public context. Guessing must not widen exposure.
+  it("treats an unknown visibility as PRIVATE", () => {
+    const req = toolArgsToThinkRequest(
+      { goal: "g", context_items: [{ id: "a", content: "x", visibility: "secret" }] },
+      ctx,
+    );
+    expect(req.context_items[0].visibility).toBe("PRIVATE");
+  });
+
+  it("keeps the documented PUBLIC default when visibility is absent", () => {
+    const req = toolArgsToThinkRequest(
+      { goal: "g", context_items: [{ id: "a", content: "x" }] },
+      ctx,
+    );
+    expect(req.context_items[0].visibility).toBe("PUBLIC");
+  });
+});

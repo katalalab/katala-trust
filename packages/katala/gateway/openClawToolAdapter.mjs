@@ -21,11 +21,18 @@ function normalizeMode(mode) {
 }
 
 function normalizeVisibility(value) {
+  // Absent means the caller accepted the documented default of PUBLIC. An
+  // *unrecognised* token means the caller meant something this build does not know,
+  // and guessing PUBLIC widens exposure — "secret" and "confidential" both used to
+  // land there and get scored and forwarded. Guess the most restrictive instead.
+  if (value === undefined || value === null || value === "") {
+    return "PUBLIC";
+  }
   const v = asString(value, "PUBLIC").toUpperCase();
   if (v === "IGNORE" || v === "PRIVATE" || v === "MEDIATION" || v === "PUBLIC") {
     return v;
   }
-  return "PUBLIC";
+  return "PRIVATE";
 }
 
 /**
