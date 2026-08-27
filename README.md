@@ -5,6 +5,12 @@ and emit fail-closed recommendations — without owning host memory or execution
 
 > Private R&D monorepo stays separate. This repository is the public, measurable cut.
 
+## Verified baseline — 2026-08-28
+
+Typecheck and local verification pass: 149 core tests, 65 gateway tests, and 30/30 trust-eval cases. The dependency audit reports zero known vulnerabilities after refreshing the lockfile.
+
+This host approval boundary is the carry-forward point for historical KS/KQ candidates: they may propose evidence, but only `allow` / `block` / `ask-human` owns host action.
+
 ## Quick start
 
 ```bash
