@@ -1,9 +1,10 @@
 # Katala Trust (OSS verification sidecar)
 
-Lab-neutral verification for AI agents: detox intent, score trust, mediate,
-and emit fail-closed recommendations — without owning host memory or execution.
+katala-trustは、エージェントが外部ツールを呼び出したり操作を行ったりする際に、その妥当性を検査して判定の推奨を返す軽量な検証サイドカーです。ホスト側の実行権限やプロセスの管理を直接引き受けるのではなく、入力内容を検査して許可や確認、拒絶といった判定結果を提示します。
 
-> Private R&D monorepo stays separate. This repository is the public, measurable cut.
+シェルコマンドの実行やファイル変更を試みるエージェントに対し独立したプロセスから判定推奨を得たい場面や、エージェントフレームワークに標準入出力経由で呼び出せる検査ステップを追加したい場面に向いています。
+
+返されるのは判定の推奨結果にすぎず、実際の実行を停止または許可する最終的な判断はホスト側で行われます。未知のプロンプトインジェクションなど汎用的な攻撃防止が実証されているわけではありません。
 
 ## Verified baseline — 2026-08-28
 
